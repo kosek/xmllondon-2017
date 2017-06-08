@@ -1,0 +1,11 @@
+date ::= space* day space+ month space+ year space* eof
+day ::= number ord?
+number ::= digit+
+year ::= number
+
+<?TOKENS?>
+eof ::= $
+ord ::= "st" | "nd" | "rd" | "th"
+space ::= " "
+digit ::= [0-9]
+month ::= "January" | "February" | "March" | "April" | "May" | "June" | "July" | "August" | "September" | "October" | "November" | "December"
