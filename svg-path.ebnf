@@ -20,7 +20,7 @@ closepath::=
     ("Z" | "z")
 
 lineto::=
-    ("L"|"l") wsp* (coordinate_pair_sequence | closepath) wsp*
+    ("L"|"l") wsp* (coordinate_pair_sequence | closepath)
 
 horizontal_lineto::=
     ("H"|"h") wsp* coordinate_sequence

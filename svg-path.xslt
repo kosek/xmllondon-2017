@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- This file was generated on Mon May 8, 2017 18:56 (UTC+02) by REx v5.44 which is Copyright (c) 1979-2017 by Gunther Rademacher <grd@gmx.net> -->
+<!-- This file was generated on Thu Jun 8, 2017 15:05 (UTC+01) by REx v5.44 which is Copyright (c) 1979-2017 by Gunther Rademacher <grd@gmx.net> -->
 <!-- REx command line: -tree -xslt -backtrack -name http://example.com/parser/svg-path svg-path.ebnf -->
 
 <xsl:stylesheet version="2.0"
@@ -2786,39 +2786,6 @@
   </xsl:function>
 
   <!--~
-   ! Parse the 2nd loop of production lineto (zero or more). Use
-   ! tail recursion for iteratively updating the lexer state.
-   !
-   ! @param $input the input string.
-   ! @param $state lexer state, error indicator, and result.
-   ! @return the updated state.
-  -->
-  <xsl:function name="p:parse-lineto-2">
-    <xsl:param name="input" as="xs:string"/>
-    <xsl:param name="state" as="item()+"/>
-
-    <xsl:choose>
-      <xsl:when test="$state[$p:error]">
-        <xsl:sequence select="$state"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:variable name="state" select="p:lookahead1(16, $input, $state)"/>      <!-- eof | wsp | 'A' | 'B' | 'C' | 'H' | 'L' | 'M' | 'Q' | 'S' | 'T' | 'V' |
-                                                                                         'Z' | 'a' | 'b' | 'c' | 'h' | 'l' | 'm' | 'q' | 's' | 't' | 'v' |
-                                                                                         'z' -->
-        <xsl:choose>
-          <xsl:when test="$state[$p:l1] != 7">                                      <!-- wsp -->
-            <xsl:sequence select="$state"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:variable name="state" select="p:consume(7, $input, $state)"/>      <!-- wsp -->
-            <xsl:sequence select="p:parse-lineto-2($input, $state)"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:function>
-
-  <!--~
    ! Parse lineto.
    !
    ! @param $input the input string.
@@ -2869,7 +2836,6 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:variable name="state" select="p:parse-lineto-2($input, $state)"/>
     <xsl:variable name="end" select="$state[$p:e0]"/>
     <xsl:sequence select="p:reduce($state, 'lineto', $count, $begin, $end)"/>
   </xsl:function>
@@ -2956,6 +2922,72 @@
   </xsl:function>
 
   <!--~
+   ! Parse the 1st loop of production closepath (zero or more). Use
+   ! tail recursion for iteratively updating the lexer state.
+   !
+   ! @param $input the input string.
+   ! @param $state lexer state, error indicator, and result.
+   ! @return the updated state.
+  -->
+  <xsl:function name="p:parse-closepath-1">
+    <xsl:param name="input" as="xs:string"/>
+    <xsl:param name="state" as="item()+"/>
+
+    <xsl:choose>
+      <xsl:when test="$state[$p:error]">
+        <xsl:sequence select="$state"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:variable name="state" select="p:lookahead1(16, $input, $state)"/>      <!-- eof | wsp | 'A' | 'B' | 'C' | 'H' | 'L' | 'M' | 'Q' | 'S' | 'T' | 'V' |
+                                                                                         'Z' | 'a' | 'b' | 'c' | 'h' | 'l' | 'm' | 'q' | 's' | 't' | 'v' |
+                                                                                         'z' -->
+        <xsl:choose>
+          <xsl:when test="$state[$p:l1] != 7">                                      <!-- wsp -->
+            <xsl:sequence select="$state"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:variable name="state" select="p:consume(7, $input, $state)"/>      <!-- wsp -->
+            <xsl:sequence select="p:parse-closepath-1($input, $state)"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
+
+  <!--~
+   ! Try parsing the 1st loop of production closepath (zero or more). Use
+   ! tail recursion for iteratively updating the lexer state.
+   !
+   ! @param $input the input string.
+   ! @param $state lexer state, error indicator, and result.
+   ! @return the updated state.
+  -->
+  <xsl:function name="p:try-closepath-1">
+    <xsl:param name="input" as="xs:string"/>
+    <xsl:param name="state" as="item()+"/>
+
+    <xsl:choose>
+      <xsl:when test="$state[$p:error]">
+        <xsl:sequence select="$state"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:variable name="state" select="p:lookahead1(16, $input, $state)"/>      <!-- eof | wsp | 'A' | 'B' | 'C' | 'H' | 'L' | 'M' | 'Q' | 'S' | 'T' | 'V' |
+                                                                                         'Z' | 'a' | 'b' | 'c' | 'h' | 'l' | 'm' | 'q' | 's' | 't' | 'v' |
+                                                                                         'z' -->
+        <xsl:choose>
+          <xsl:when test="$state[$p:l1] != 7">                                      <!-- wsp -->
+            <xsl:sequence select="$state"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:variable name="state" select="p:consumeT(7, $input, $state)"/>     <!-- wsp -->
+            <xsl:sequence select="p:try-closepath-1($input, $state)"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
+
+  <!--~
    ! Parse closepath.
    !
    ! @param $input the input string.
@@ -2987,6 +3019,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    <xsl:variable name="state" select="p:parse-closepath-1($input, $state)"/>
     <xsl:variable name="end" select="$state[$p:e0]"/>
     <xsl:sequence select="p:reduce($state, 'closepath', $count, $begin, $end)"/>
   </xsl:function>
@@ -3021,6 +3054,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    <xsl:variable name="state" select="p:try-closepath-1($input, $state)"/>
     <xsl:sequence select="$state"/>
   </xsl:function>
 
@@ -3451,8 +3485,9 @@
       <xsl:choose>
         <xsl:when test="$state[$p:l1] = (18,                                          (: 'Z' :)
                                          29)">                                      <!-- 'z' -->
-          <xsl:variable name="state" select="p:lookahead2(15, $input, $state)"/>    <!-- eof | 'A' | 'B' | 'C' | 'H' | 'L' | 'M' | 'Q' | 'S' | 'T' | 'V' | 'Z' |
-                                                                                         'a' | 'b' | 'c' | 'h' | 'l' | 'm' | 'q' | 's' | 't' | 'v' | 'z' -->
+          <xsl:variable name="state" select="p:lookahead2(16, $input, $state)"/>    <!-- eof | wsp | 'A' | 'B' | 'C' | 'H' | 'L' | 'M' | 'Q' | 'S' | 'T' | 'V' |
+                                                                                         'Z' | 'a' | 'b' | 'c' | 'h' | 'l' | 'm' | 'q' | 's' | 't' | 'v' |
+                                                                                         'z' -->
           <xsl:variable name="state" as="item()+">
             <xsl:choose>
               <xsl:when test="$state[$p:lk] = (82,                                    (: 'Z' eof :)
@@ -3460,13 +3495,15 @@
                 <xsl:variable name="state" select="p:lookahead3(0, $input, $state)"/> <!-- END -->
                 <xsl:sequence select="$state"/>
               </xsl:when>
-              <xsl:when test="$state[$p:lk] = (594,                                   (: 'Z' 'Z' :)
+              <xsl:when test="$state[$p:lk] = (242,                                   (: 'Z' wsp :)
+                                               594,                                   (: 'Z' 'Z' :)
                                                946,                                   (: 'Z' 'z' :)
+                                               253,                                   (: 'z' wsp :)
                                                605,                                   (: 'z' 'Z' :)
                                                957)">                               <!-- 'z' 'z' -->
-                <xsl:variable name="state" select="p:lookahead3(15, $input, $state)"/> <!-- eof | 'A' | 'B' | 'C' | 'H' | 'L' | 'M' | 'Q' | 'S' | 'T' | 'V' |
-                                                                                            'Z' | 'a' | 'b' | 'c' | 'h' | 'l' | 'm' | 'q' | 's' | 't' | 'v' |
-                                                                                            'z' -->
+                <xsl:variable name="state" select="p:lookahead3(16, $input, $state)"/> <!-- eof | wsp | 'A' | 'B' | 'C' | 'H' | 'L' | 'M' | 'Q' | 'S' | 'T' |
+                                                                                            'V' | 'Z' | 'a' | 'b' | 'c' | 'h' | 'l' | 'm' | 'q' | 's' | 't' |
+                                                                                            'v' | 'z' -->
                 <xsl:sequence select="$state"/>
               </xsl:when>
               <xsl:when test="$state[$p:lk] = (274,                                   (: 'Z' 'A' :)
