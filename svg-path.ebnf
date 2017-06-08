@@ -1,0 +1,106 @@
+svg_path::= wsp* (moveto drawto_command*)? eof
+
+drawto_command::=
+    moveto
+    | closepath
+    | lineto
+    | horizontal_lineto
+    | vertical_lineto
+    | curveto
+    | smooth_curveto
+    | quadratic_bezier_curveto
+    | smooth_quadratic_bezier_curveto
+    | elliptical_arc
+    | bearing
+
+moveto::=
+    ( "M" | "m" ) wsp* coordinate_pair_sequence wsp* closepath?
+
+closepath::= 
+    ("Z" | "z")
+
+lineto::=
+    ("L"|"l") wsp* (coordinate_pair_sequence | closepath) wsp*
+
+horizontal_lineto::=
+    ("H"|"h") wsp* coordinate_sequence
+
+vertical_lineto::=
+    ("V"|"v") wsp* coordinate_sequence
+
+curveto::=
+    ("C"|"c") wsp* (curveto_coordinate_sequence | (coordinate_pair_sequence? closepath))
+
+curveto_coordinate_sequence::=
+    coordinate_pair_triplet
+    | (coordinate_pair_triplet comma_wsp? curveto_coordinate_sequence)
+
+smooth_curveto::=
+    ("S"|"s") wsp* (smooth_curveto_coordinate_sequence
+    | (coordinate_pair_sequence? closepath))
+
+smooth_curveto_coordinate_sequence::=
+    coordinate_pair_double
+    | (coordinate_pair_double comma_wsp? smooth_curveto_coordinate_sequence)
+
+quadratic_bezier_curveto::=
+    ("Q"|"q") wsp*
+    (quadratic_bezier_curveto_coordinate_sequence | (coordinate_pair_sequence? closepath))
+
+quadratic_bezier_curveto_coordinate_sequence::=
+    coordinate_pair_double
+    | (coordinate_pair_double comma_wsp? quadratic_bezier_curveto_coordinate_sequence)
+
+smooth_quadratic_bezier_curveto::=
+    ("T"|"t") wsp* (coordinate_pair_sequence | closepath)
+
+elliptical_arc::=
+    ( "A" | "a" ) wsp*
+    (elliptical_arc_argument_sequence
+    | (elliptical_arc_argument_sequence? elliptical_arc_closing_argument))
+
+elliptical_arc_argument_sequence::=
+    elliptical_arc_argument
+    | (elliptical_arc_argument comma_wsp? elliptical_arc_argument_sequence)
+
+elliptical_arc_argument::=
+    number comma_wsp? number comma_wsp? number comma_wsp
+    flag comma_wsp? flag comma_wsp? coordinate_pair
+
+elliptical_arc_closing_argument::=
+    number comma_wsp? number comma_wsp? number comma_wsp
+    flag comma_wsp? flag comma_wsp? closepath
+
+bearing::=
+    ( "B" | "b" ) wsp* bearing_argument_sequence 
+
+bearing_argument_sequence::=
+    number | (number comma_wsp? bearing_argument_sequence)
+
+coordinate_pair_double::=
+    coordinate_pair comma_wsp? coordinate_pair
+
+coordinate_pair_triplet::=
+    coordinate_pair comma_wsp? coordinate_pair comma_wsp? coordinate_pair
+
+coordinate_pair_sequence::=
+    coordinate_pair | (coordinate_pair comma_wsp? coordinate_pair_sequence)
+
+coordinate_sequence::=
+    coordinate | (coordinate comma_wsp? coordinate_sequence)
+
+coordinate_pair::= coordinate
+                   (comma_wsp unsigned-coordinate | signed-coordinate)
+
+coordinate::= signed-coordinate | unsigned-coordinate
+signed-coordinate::= sign number
+unsigned-coordinate::= number
+
+<?TOKENS?>
+
+eof ::= $
+sign::= "+"|"-"
+number ::= [0-9]+
+flag::=("0"|"1")
+comma_wsp::=(wsp+ ","? wsp*) | ("," wsp*)
+wsp ::= (#x9 | #x20 | #xA | #xC | #xD)
