@@ -23,7 +23,7 @@
       <sch:assert test="not($parsed-date/self::ERROR)">Invalid date format.
         Error found: <sch:value-of select="p:parse-date(.)"/></sch:assert>
       
-      <sch:report test="not($parsed-date/self::ERROR) and not($iso-date castable as xs:date)">Wrong month or day. Can not be interpreted as proper ISO8601 data: <sch:value-of select="$iso-date"/></sch:report>
+      <sch:report test="not($parsed-date/self::ERROR) and not($iso-date castable as xs:date)">Wrong month or day. Can not be interpreted as proper ISO8601 date: <sch:value-of select="$iso-date"/></sch:report>
     </sch:rule>
   </sch:pattern>
   
